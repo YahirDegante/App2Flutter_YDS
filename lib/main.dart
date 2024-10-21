@@ -1,10 +1,15 @@
-import 'package:actividad02_yahirdegante/modules/reset_password/screens/send_code.dart';
-import 'package:actividad02_yahirdegante/modules/reset_password/screens/validate_code.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:actividad02_yahirdegante/widgets/splash_screen.dart';
 import 'package:actividad02_yahirdegante/modules/auth/screens/login.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 

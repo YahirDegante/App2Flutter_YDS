@@ -1,3 +1,6 @@
+import 'package:actividad02_yahirdegante/modules/auth/screens/register.dart';
+import 'package:actividad02_yahirdegante/navigation/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:actividad02_yahirdegante/modules/reset_password/screens/send_code.dart';
 
@@ -54,13 +57,13 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
-                height: 48,
                 child: ElevatedButton(
-                  onPressed: () {
-                    print('Email: ${_email.text}');
-                    print('Contraseña: ${_pass.text}');
-                  },
-                  child: const Text('Iniciar sesión'),
+                  onPressed: () => _login(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text("Iniciar sesión"),
                 ),
               ),
               const SizedBox(height: 16),
@@ -73,10 +76,43 @@ class _LoginState extends State<Login> {
                 },
                 child: const Text('¿Olvidaste tu contraseña?'),
               ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Register()),
+                  );
+                },
+                child: const Text('Registrarse', style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.blue,
+                            ),),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
+  void _login() async {
+  try {
+    final credential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: _email.text, password: _pass.text);
+
+    print(credential);
+    
+    // Redirigir a la pantalla de perfil
+    Navigator.pushReplacement(context,
+      MaterialPageRoute(builder: (context) => const Profile()),
+    );
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      print('No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      print('Wrong password provided for that user.');
+    }
+  }
+}
 }
